@@ -1,6 +1,5 @@
 package com.rcelik.springguru.reactivemongodb.web.fn;
 
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 import com.rcelik.springguru.reactivemongodb.model.BeerDTO;
-import com.rcelik.springguru.reactivemongodb.service.BeerServiceImpl;
 import com.rcelik.springguru.reactivemongodb.service.BeerServiceImplTest;
 
 import reactor.core.publisher.Mono;
