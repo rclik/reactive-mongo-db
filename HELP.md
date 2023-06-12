@@ -134,6 +134,8 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class BeerDTO {
     private Integer id;
@@ -155,6 +157,9 @@ public class BeerDTO {
 }
 
 ```
+
+> DTO class ında AllArgs ve NoArgs Constructor annotation larını eklememiz lazım.
+> Yoksa user dan gelen objeler serialize edilemiyorlar.
 
 Şimdi MapConstruct library sini kullanarak bu iki object arasındaki conversion ları oluşturalım.
 
