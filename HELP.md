@@ -947,3 +947,37 @@ Ya da şöyle yapılabilir;
 ```
 
 Diğerlerini de service lerde bakabilirsin.
+
+### DTO validation
+
+DTO objesini validate etmek biraz daha bizim işimiz gibi.
+
+DTO objesini validate etmek için, yine eskisinde olduğu gibi spring framework un validation starter ını kullanıyoruz.
+Onu zaten eklemiştik;
+
+```json
+ implementation 'org.springframework.boot:spring-boot-starter-validation'
+```
+
+Validation işlemlerini yine handler class ında yapmak daha mantıklı. Http dünyasından gelen request lerin handle edilmesi işlemleri hep bu class da olacak.
+
+Validator işlemni yapmak için, önce spring validation library lerinden gelen Validator class ını inject ediyoruz. Bu class in instantiate edilmesi işlemini Spring Context otomatik olarka yapıyor. Ayrıca birşey berlirtmemize gerek yok.
+
+Sonra, validation işlemini yapacağımı metodu yazıyoruz. Bu method bir BeerDTO method parametresi si alacak. Bu parametreyi validator kullanaran validate edeceğiz. Koddaki ilk işlem BeanPropertyBindingResult objecsi oluşturmak ve bunu validator ile validate etmek. Sonra hata varsa da Exception ları atmak. ServerWebInputException kullanarak bu exception ı atabiliriz. Bu exception ı kullanırsak 400 dönüyor RunttimeException ile atarsam 500 atıyor.
+
+```java
+    private void validate(BeerDTO beerDTO) {
+        Errors errors = new BeanPropertyBindingResult(beerDTO, "beerDtoText");
+        validator.validate(beerDTO, errors);
+
+        if (errors.hasErrors()) {
+            throw new ServerWebInputException(errors.toString());
+        }
+    }
+```
+
+Sonrasında bizim body yi mono ya convert ettikten sonra doOnNext() methodu ile validate ediyoruz.
+
+```java
+        return request.bodyToMono(BeerDTO.class).doOnNext(this::validate)
+```
