@@ -42,15 +42,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Mono<CustomerDTO> updateCustomer(Mono<CustomerDTO> customer, String customerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateCustomer'");
+    public Mono<CustomerDTO> updateCustomer(CustomerDTO customer, String customerId) {
+        return repository.findById(customerId).map(foudnCustomer -> {
+            foudnCustomer.setName(customer.getName());
+            return foudnCustomer;
+        }).map(mapper::customerToCustomerDto);
     }
 
     @Override
     public Mono<Void> deleteCustomer(String customerId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteCustomer'");
+        return repository.deleteById(customerId);
     }
 
 }

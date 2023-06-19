@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.rcelik.springguru.reactivemongodb.domain.Beer;
 import com.rcelik.springguru.reactivemongodb.repositories.BeerRepository;
+import com.rcelik.springguru.reactivemongodb.repositories.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 public class BootStrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
         beerRepository.deleteAll().doOnSuccess(success -> {
             loadInitialBeerData();
             log.info("Old data is removed");
+        }).subscribe();
+
+        customerRepository.deleteAll().doOnSuccess(success -> {
+            log.info("Older customer data is removed.");
         }).subscribe();
     }
 

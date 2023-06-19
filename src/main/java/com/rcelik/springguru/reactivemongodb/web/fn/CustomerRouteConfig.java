@@ -1,6 +1,5 @@
 package com.rcelik.springguru.reactivemongodb.web.fn;
 
-import org.hibernate.validator.internal.util.privilegedactions.GetAnnotationAttribute;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -27,6 +26,8 @@ public class CustomerRouteConfig {
                 .GET(CUSTOMER_PATH, RequestPredicates.accept(MediaType.APPLICATION_JSON), handler::getAllCustomers)
                 .GET(CUSTOMER_ID, RequestPredicates.accept(MediaType.APPLICATION_JSON), handler::getCustomerById)
                 .POST(CUSTOMER_PATH, RequestPredicates.contentType(MediaType.APPLICATION_JSON), handler::addCustomer)
+                .PUT(CUSTOMER_ID, RequestPredicates.accept(MediaType.APPLICATION_JSON), handler::updateCustomer)
+                .DELETE(CUSTOMER_ID, handler::deleteCustomerById)
                 .build();
     }
 
