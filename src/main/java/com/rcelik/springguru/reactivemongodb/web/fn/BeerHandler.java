@@ -31,7 +31,7 @@ public class BeerHandler {
     private final Validator validator;
 
     private void validate(BeerDTO beerDTO) {
-        Errors errors = new BeanPropertyBindingResult(beerDTO, "beerDtoText");
+        Errors errors = new BeanPropertyBindingResult(beerDTO, "beerDtoObject");
         validator.validate(beerDTO, errors);
 
         if (errors.hasErrors()) {
