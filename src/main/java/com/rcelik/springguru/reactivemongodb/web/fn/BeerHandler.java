@@ -11,6 +11,7 @@ import com.rcelik.springguru.reactivemongodb.model.BeerDTO;
 import com.rcelik.springguru.reactivemongodb.service.BeerService;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -25,23 +26,28 @@ public class BeerHandler {
     private final BeerService beerService;
 
     public Mono<ServerResponse> listBeers(ServerRequest request) {
-        // it returns all elements on a ServerResponse object
-        return ServerResponse.ok().body(beerService.listBeers(), BeerDTO.class);
+        Flux<BeerDTO> result;
+        if (request.queryParam("beerStyle").isPresent()) {
+            result = beerService.findAllByBeerStyle(request.queryParam("beerStyle").get());
+        } else {
+            result = beerService.listBeers();
+        }
+
+        return ServerResponse.ok().body(result, BeerDTO.class);
     }
 
     public Mono<ServerResponse> getBeerById(ServerRequest request) {
 
-        
         return ServerResponse.ok().body(
                 beerService.getBeer(request.pathVariable("beerId"))
                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND))),
                 BeerDTO.class);
-         
-        /* 
-        return beerService.getBeer(request.pathVariable("beerId"))
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
-                .flatMap(beerDto -> ServerResponse.ok().bodyValue(beerDto));
-                */
+
+        /*
+         * return beerService.getBeer(request.pathVariable("beerId"))
+         * .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+         * .flatMap(beerDto -> ServerResponse.ok().bodyValue(beerDto));
+         */
     }
 
     public Mono<ServerResponse> createNewBeer(ServerRequest request) {

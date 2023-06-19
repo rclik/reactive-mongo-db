@@ -947,3 +947,27 @@ Ya da şöyle yapılabilir;
 ```
 
 Diğerlerini de service lerde bakabilirsin.
+
+### Query Parametresi Almak
+
+Bir request den nasıl query parametresini alabiliriz ona bakalım şimdi.
+
+Request den query parametresi alınması işlemi de handler class ında olmalıdır. Çünkü http request inden bilgi alınması orada olmalıdır.
+
+Query parametreleri genelde optional dır. Onun için kodu hazırlayalım;
+
+
+```java
+    public Mono<ServerResponse> listBeers(ServerRequest request) {
+        Flux<BeerDTO> result;
+
+        if (request.queryParam("beerStyle").isPresent()) {
+            result = beerService.findAllByBeerStyle(request.queryParam("beerStyle").get());
+        } else {
+            result = beerService.listBeers();
+        }
+
+        return ServerResponse.ok().body(result, BeerDTO.class);
+    }
+````
+
